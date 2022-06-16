@@ -674,3 +674,32 @@ app.post("/api/project_assignment/", (req, res) => {
     }
   );
 });
+app.put("/api/project_assignment/:id", (req, res) => {
+  const { id } = req.params;
+  const { pras_employee_id, pras_startdate, pras_enddate, pras_status } =
+    req.body;
+  pool.query(
+    "update project_assignment set pras_employee_id=$1,pras_startdate=$2,pras_enddate=$3,pras_status=$4 where pras_proj_id=$5",
+    [pras_employee_id, pras_startdate, pras_enddate, pras_status, id],
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(result.rowCount);
+    }
+  );
+});
+
+app.delete("/api/project_assignment/:id", (req, res) => {
+  const { id } = req.params;
+  pool.query(
+    "delete from project_assignment where pras_proj_id = $1",
+    [id],
+    (error, result) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(result.rowCount);
+    }
+  );
+});
