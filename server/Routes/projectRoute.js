@@ -8,5 +8,6 @@ router.get("/:id", indexCtrl.ProjectCtrl.findOne);
 router.post("/", indexCtrl.ProjectCtrl.create);
 router.put("/:id", indexCtrl.ProjectCtrl.update);
 router.delete("/:id", indexCtrl.ProjectCtrl.deleted);
+router.get("/sql/:id", indexCtrl.ProjectCtrl.querySQL);
 
 export default router;

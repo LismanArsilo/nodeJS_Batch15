@@ -1,3 +1,5 @@
+import { sequelize } from "../models/init-models";
+
 const findAll = async (req, res) => {
   try {
     const project = await req.context.models.projects.findAll();
@@ -67,6 +69,21 @@ const deleted = async (req, res) => {
     return res.status(404).send(error);
   }
 };
+// select berdasarkan proj_id
+const querySQL = async (req, res) => {
+  try {
+    await sequelize
+      .query("SELECT * from projects where proj_id = :proj_id", {
+        replacements: { proj_id: req.params.id },
+        type: sequelize.QueryTypes.SELECT,
+      })
+      .then((result) => {
+        return res.send(result);
+      });
+  } catch (error) {
+    return res.status(404).send(error);
+  }
+};
 
 export default {
   findAll,
@@ -74,4 +91,5 @@ export default {
   create,
   update,
   deleted,
+  querySQL,
 };
