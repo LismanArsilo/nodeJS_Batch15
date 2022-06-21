@@ -2,7 +2,14 @@ import { sequelize } from "../models/init-models";
 
 const findAll = async (req, res) => {
   try {
-    const dependent = await req.context.models.dependents.findAll();
+    const dependent = await req.context.models.dependents.findAll({
+      include: [
+        // OUTHER JOIN menampilkan yang memiliki relasi dengan table dependents
+        {
+          all: true,
+        },
+      ],
+    });
     return res.send(dependent);
   } catch (error) {
     return res.status(404).send(error);
@@ -18,14 +25,16 @@ const findOne = async (req, res) => {
     return res.status(404).send(error);
   }
 };
+// menerima dari employees
 const create = async (req, res) => {
+  const cekDependent = req.employees;
   try {
     const dependent = await req.context.models.dependents.create({
       dependent_id: req.body.dependent_id,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       relationship: req.body.relationship,
-      employee_id: req.body.employee_id,
+      employee_id: cekDependent.employee_id,
     });
     return res.send(dependent);
   } catch (error) {

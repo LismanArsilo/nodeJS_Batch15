@@ -2,7 +2,16 @@ import { sequelize } from "../models/init-models";
 
 const findAll = async (req, res) => {
   try {
-    const job = await req.context.models.jobs.findAll();
+    const job = await req.context.models.jobs.findAll({
+      include: [
+        {
+          // RIGHT JOIN: mengembalikan semua baris dari tabel kanan, bahkan jika tidak ada kecocokan di tabel kiri.
+          model: req.context.models.employees,
+          as: "employees",
+          right: true,
+        },
+      ],
+    });
     return res.send(job);
   } catch (error) {
     return res.status(404).send(error);
@@ -31,6 +40,22 @@ const create = async (req, res) => {
     return res.status(404).send(error);
   }
 };
+// mengirim ke employee masih manual
+const createNext = async (req, res, next) => {
+  try {
+    const job = await req.context.models.jobs.create({
+      job_id: req.body.job_id,
+      min_salary: req.body.min_salary,
+      max_salary: req.body.max_salary,
+      job_title: req.body.job_title,
+    });
+    req.jobs = job;
+    next();
+  } catch (error) {
+    return res.status(404).send(error);
+  }
+};
+
 const update = async (req, res) => {
   try {
     const job = await req.context.models.jobs.update(
@@ -76,6 +101,7 @@ export default {
   findAll,
   findOne,
   create,
+  createNext,
   update,
   deleted,
   querySQL,

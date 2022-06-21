@@ -3,7 +3,14 @@ import { sequelize } from "../models/init-models";
 const findAll = async (req, res) => {
   try {
     const project_assignment =
-      await req.context.models.project_assignment.findAll();
+      await req.context.models.project_assignment.findAll({
+        include: [
+          {
+            // OUTHER JOIN menampilkan table kanan dan kiri yang memiliki relasi dengan table project_assignment
+            all: true,
+          },
+        ],
+      });
     return res.send(project_assignment);
   } catch (error) {
     return res.status(404).send(error);
@@ -22,10 +29,11 @@ const findOne = async (req, res) => {
   }
 };
 const create = async (req, res) => {
+  const cekProj = req.projects;
   try {
     const project_assignment =
       await req.context.models.project_assignment.create({
-        pras_proj_id: req.body.pras_proj_id,
+        pras_proj_id: req.body.proj_id,
         pras_employee_id: req.body.pras_employee_id,
         pras_startdate: req.body.pras_startdate,
         pras_enddate: req.body.pras_enddate,

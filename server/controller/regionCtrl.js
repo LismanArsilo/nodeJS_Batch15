@@ -3,7 +3,16 @@ import { sequelize } from "../models/init-models";
 
 const findAll = async (req, res) => {
   try {
-    const region = await req.context.models.regions.findAll();
+    const region = await req.context.models.regions.findAll({
+      include: [
+        {
+          // RIGHT JOIN: mengembalikan semua baris dari tabel kanan, bahkan jika tidak ada kecocokan di tabel kiri.
+          model: req.context.models.countries,
+          as: "countries",
+          right: true,
+        },
+      ],
+    });
     return res.send(region);
   } catch (error) {
     return res.status(404).send(error);
@@ -30,6 +39,19 @@ const create = async (req, res) => {
     return res.status(404).send(error);
   }
 };
+
+const createNext = async (req, res, next) => {
+  try {
+    const region = await req.context.models.regions.create({
+      region_name: req.body.region_name,
+    });
+    req.regions = region;
+    next();
+  } catch (error) {
+    return res.status(404).send(error);
+  }
+};
+
 const update = async (req, res) => {
   try {
     const region = await req.context.models.regions.update(
@@ -78,6 +100,7 @@ export default {
   findAll,
   findOne,
   create,
+  createNext,
   update,
   deleted,
   querySQL,

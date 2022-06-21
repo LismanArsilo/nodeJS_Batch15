@@ -2,7 +2,14 @@ import { sequelize } from "../models/init-models";
 
 const findAll = async (req, res) => {
   try {
-    const employee = await req.context.models.employees.findAll();
+    const employee = await req.context.models.employees.findAll({
+      include: [
+        {
+          // OUTHER JOIN menampilkan semua yang memiliki relasi dengan employees
+          all: true,
+        },
+      ],
+    });
     return res.send(employee);
   } catch (error) {
     return res.status(404).send(error);
@@ -19,6 +26,10 @@ const findOne = async (req, res) => {
   }
 };
 const create = async (req, res) => {
+  // agar tidak bentrok mengambil data langsung dari req body
+  // yang sama tidak perlu di input kembali
+  const cekDepartment = req.departments;
+  const cekJob = req.jobs;
   try {
     const employee = await req.context.models.employees.create({
       employee_id: req.body.employee_id,
@@ -37,6 +48,29 @@ const create = async (req, res) => {
     return res.status(404).send(error);
   }
 };
+
+// mengirim ke dependent
+const createNext = async (req, res, next) => {
+  try {
+    const employee = await req.context.models.employees.create({
+      employee_id: req.body.employee_id,
+      first_name: req.body.first_,
+      last_name: req.body.last_,
+      email: req.body.email,
+      phone_number: req.body.phone_number,
+      hire_date: req.body.hire_date,
+      salary: req.body.salary,
+      manager_id: req.body.manager_id,
+      department_id: req.body.department_id,
+      job_id: req.body.job_id,
+    });
+    req.employees = employee;
+    next();
+  } catch (error) {
+    return res.status(404).send(error);
+  }
+};
+
 const update = async (req, res) => {
   try {
     const employee = await req.context.models.employees.update(
@@ -89,6 +123,7 @@ export default {
   findAll,
   findOne,
   create,
+  createNext,
   update,
   deleted,
   querySQL,
