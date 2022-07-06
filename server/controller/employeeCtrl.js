@@ -26,22 +26,24 @@ const findOne = async (req, res) => {
   }
 };
 const create = async (req, res) => {
+  const { files, fields } = req.fileAttrb;
   // agar tidak bentrok mengambil data langsung dari req body
   // yang sama tidak perlu di input kembali
   const cekDepartment = req.departments;
   const cekJob = req.jobs;
   try {
     const employee = await req.context.models.employees.create({
-      employee_id: req.body.employee_id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      phone_number: req.body.phone_number,
-      hire_date: req.body.hire_date,
-      salary: req.body.salary,
-      manager_id: req.body.manager_id,
-      department_id: req.body.department_id,
-      job_id: req.body.job_id,
+      employee_id: parseInt(fields[0].value),
+      first_name: fields[1].value,
+      last_name: fields[2].value,
+      email: fields[3].value,
+      phone_number: fields[4].value,
+      hire_date: new Date(),
+      salary: parseInt(fields[5].value),
+      department_id: parseInt(fields[6].value),
+      job_id: parseInt(fields[7].value),
+      manager_id: parseInt(fields[8].value),
+      emp_profile: files[0].file.newFilename,
     });
     return res.send(employee);
   } catch (error) {

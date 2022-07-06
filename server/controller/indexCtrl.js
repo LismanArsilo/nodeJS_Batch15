@@ -7,6 +7,7 @@ import DependentCtrl from "./dependentCtrl";
 import EmployeeCtrl from "./employeeCtrl";
 import ProjectCtrl from "./projectCtrl";
 import project_assignmentCtrl from "./project_assigntmentCtrl";
+import userCtrl from "./userCtrl";
 
 export default {
   RegCtrl,
@@ -18,4 +19,5 @@ export default {
   EmployeeCtrl,
   ProjectCtrl,
   project_assignmentCtrl,
+  userCtrl,
 };

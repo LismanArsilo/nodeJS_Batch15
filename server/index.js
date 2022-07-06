@@ -30,6 +30,7 @@ app.use("/dependent", routes.DependentRoute);
 app.use("/employee", routes.EmployeeRoute);
 app.use("/project", routes.ProjectRoute);
 app.use("/project_assignment", routes.project_assignmentRoute);
+app.use("/user", routes.userRoute);
 
 const dropDatabaseSync = false;
 sequelize.sync({ force: dropDatabaseSync }).then(async () => {

@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
     pool: {
       max: 5,
       min: 0,
-      acquire: 3000,
+      acquire: 30000,
       idle: 10000,
     },
   }
@@ -26,6 +26,7 @@ const _locations = require("./locations");
 const _project_assignment = require("./project_assignment");
 const _projects = require("./projects");
 const _regions = require("./regions");
+const _users = require("./users");
 
 function initModels(sequelize) {
   const countries = _countries(sequelize, DataTypes);
@@ -37,6 +38,7 @@ function initModels(sequelize) {
   const project_assignment = _project_assignment(sequelize, DataTypes);
   const projects = _projects(sequelize, DataTypes);
   const regions = _regions(sequelize, DataTypes);
+  const users = _users(sequelize, DataTypes);
 
   employees.belongsToMany(projects, {
     as: "pras_proj_id_projects",
@@ -115,13 +117,13 @@ function initModels(sequelize) {
     project_assignment,
     projects,
     regions,
+    users,
   };
 }
 
 const models = initModels(sequelize);
 export default models;
 export { sequelize };
-
 // module.exports = initModels;
 // module.exports.initModels = initModels;
 // module.exports.default = initModels;

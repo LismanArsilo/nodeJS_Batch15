@@ -7,6 +7,7 @@ import DependentRoute from "./dependentRoute";
 import EmployeeRoute from "./employeeRoute";
 import ProjectRoute from "./projectRoute";
 import project_assignmentRoute from "./project_assignmentRoute";
+import userRoute from "./userRoute";
 
 export default {
   RegRoute,
@@ -18,4 +19,5 @@ export default {
   EmployeeRoute,
   ProjectRoute,
   project_assignmentRoute,
+  userRoute,
 };
